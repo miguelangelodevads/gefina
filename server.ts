@@ -1,10 +1,18 @@
-import { createServer } from "node:http";
-import send from "./send.ts";
+import express from "express";
 
-createServer(function (request, response) {
-  if (request.url === "/health") {
-    send(response, 404, { message: "Recurso não encontrado" });
-    return;
-  }
-  send(response, 200, { message: "ok" });
-}).listen(3000);
+const app = express();
+
+app.use(function (request, response, next) {
+  console.log(request.method + " " + request.url);
+  next();
+});
+
+app.get("/api/health", function (request, response) {
+  response.status(200).json({ status: "ok" });
+});
+
+app.use(function (request, response) {
+  response.status(400).json({ message: "Recurso não encontrado" });
+});
+
+app.listen(3000);
