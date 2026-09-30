@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gefina - Faturas</title>
+  </head>
+  <body>
+    <h1>Faturas</h1>
+    <table>
+      <thead>
+        <tr>
+          <td>Cliente</td>
+          <td>Valor</td>
+          <td>Emissão</td>
+          <td>Vencimento</td>
+          <td>Situação</td>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <script>
+      const invoices = [
+        {
+          id: 1,
+          amount: 125000,
+          status: "pending",
+          issueDate: "2026-06-01",
+          dueDate: "2026-06-15",
+          customer: {
+            id: 1,
+            name: "Construtora Meridiano",
+            email: "contato@meridiano.com.br",
+          },
+        },
+        {
+          id: 2,
+          amount: 348000,
+          status: "paid",
+          issueDate: "2026-05-12",
+          dueDate: "2026-06-11",
+          customer: {
+            id: 1,
+            name: "Construtora Meridiano",
+            email: "contato@meridiano.com.br",
+          },
+        },
+        {
+          id: 3,
+          amount: 96500,
+          status: "pending",
+          issueDate: "2026-06-20",
+          dueDate: "2026-07-20",
+          customer: {
+            id: 2,
+            name: "Gráfica Aurora",
+            email: "contato@graficaaurora.com.br",
+          },
+        },
+      ];
+      const tableBody = document.querySelector("tbody");
+      function statusLabel(status) {
+        switch (status) {
+          case "pending":
+            return "Pendente";
+          case "paid":
+            return "Pago";
+          default:
+            return status;
+        }
+      }
+      for (let i = 0; i < invoices.length; i++) {
+        const invoice = invoices[i];
+        const row = document.createElement("tr");
+        const client = document.createElement("td");
+        client.textContent = invoice.customer.name;
+        const amount = document.createElement("td");
+        amount.textContent = invoice.amount;
+        const issueDate = document.createElement("td");
+        issueDate.textContent = invoice.issueDate;
+        const dueDate = document.createElement("td");
+        dueDate.textContent = invoice.dueDate;
+        const status = document.createElement("td");
+        status.textContent = statusLabel(invoice.status);
+        row.appendChild(client);
+        row.appendChild(amount);
+        row.appendChild(issueDate);
+        row.appendChild(dueDate);
+        row.appendChild(status);
+        tableBody.appendChild(row);
+      }
+    </script>
+  </body>
+</html>
