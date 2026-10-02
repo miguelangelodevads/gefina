@@ -1,6 +1,6 @@
 <!doctype html>
 
-<html lang="pt-br">
+<html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
     <title>Gefina - Faturas</title>
@@ -104,7 +104,11 @@
         );
       }
 
-      ReactDOM.createRoot(root).render(<InvoiceTable invoices={invoices} />);
+      function App() {
+        return <InvoiceTable invoices={invoices} />;
+      }
+
+      ReactDOM.createRoot(root).render(<App />);
     </script>
   </body>
 </html>
