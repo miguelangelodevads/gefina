@@ -1,14 +1,14 @@
-import { Router } from "express";
+import { Router } from 'express';
 
-import invoices from "./invoice.data.ts";
+import invoices from './invoice.data.ts';
 
 const router = Router();
 
-router.get("/", (_request, response) => {
+router.get('/', (_request, response) => {
   response.status(200).json(invoices);
 });
 
-router.get("/:id", (request, response) => {
+router.get('/:id', (request, response) => {
   const id = +request.params.id;
 
   for (let i = 0; i < invoices.length; i++) {
@@ -18,7 +18,9 @@ router.get("/:id", (request, response) => {
     }
   }
 
-  response.status(404).json({ error: { message: "Fatura não encontrada." } });
+  response
+    .status(404)
+    .json({ error: { message: 'Fatura não encontrada.' } });
 });
 
 export default router;

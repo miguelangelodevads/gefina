@@ -18,3 +18,20 @@ O Gefina registra os clientes de uma organização e as faturas emitidas contra 
 - Recuperação de senha
 - Envio de arquivo de imagem
 - Representação gráfica de séries temporais
+
+---
+
+Acesse: https://gefina-r64f.onrender.com
+
+## Publicação no Render
+
+Crie um **Web Service** conectado a este repositório, na branch `main`.
+
+- Runtime: Node
+- Root Directory: deixe vazio
+- Build Command: `npm run build`
+- Start Command: `npm start`
+- Health Check Path: `/api/health`
+- Instance Type: Free
+
+O arquivo `.node-version` fixa Node 24.20.0, que permite executar os arquivos TypeScript da API diretamente. O build instala as dependências de `api/` e `web/` e gera `web/dist`. O Express serve tanto a interface quanto as rotas `/api`. A porta é fornecida pelo Render na variável `PORT`.
