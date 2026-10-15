@@ -1,2 +1,7 @@
 node_modules
 dist
+
+# Configuração local e credenciais
+.env
+.env.*
+!.env.example

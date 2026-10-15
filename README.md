@@ -35,3 +35,7 @@ Crie um **Web Service** conectado a este repositório, na branch `main`.
 - Instance Type: Free
 
 O arquivo `.node-version` fixa Node 24.20.0, que permite executar os arquivos TypeScript da API diretamente. O build instala as dependências de `api/` e `web/` e gera `web/dist`. O Express serve tanto a interface quanto as rotas `/api`. A porta é fornecida pelo Render na variável `PORT`.
+
+## Banco de dados
+
+Veja [a preparação dos ambientes e os roteiros SQL](docs/database-setup.md). A API ainda utiliza a lista em memória; a integração com o banco é a próxima etapa.
