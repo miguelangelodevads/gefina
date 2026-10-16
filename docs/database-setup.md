@@ -37,8 +37,30 @@ FROM invoices
 WHERE status = 'pending' AND due_date < CURRENT_DATE;
 ```
 
-## Próxima etapa da aplicação
+## Conectar a API
 
-A API ainda lê `api/invoice.data.ts`. Criar e popular o banco não muda automaticamente a tabela mostrada pelo site. A leitura via PostgreSQL, consultas parametrizadas, teste de conectividade no health check e configuração do banco de produção pertencem à issue #15.
+A API consulta PostgreSQL por meio de `pg`, instalado no pacote `api/`. As consultas ficam em `api/invoice.service.ts`; as rotas aguardam seus resultados com `async/await`.
 
-Quando a conexão for implementada, a string deve vir do ambiente, sem ser registrada no Git. Variáveis do frontend com prefixo `VITE_` são expostas ao navegador e não devem conter credenciais do banco.
+Para desenvolvimento, copie `api/.env.example` para `api/.env` e preencha `DATABASE_URL` com a conexão da branch `development`. Preserve os parâmetros SSL fornecidos pelo Neon. A variável é carregada pelo comando `npm run dev` executado em `api/`.
+
+O arquivo `.env` é ignorado pelo Git. Nunca coloque credenciais em variáveis `VITE_`, pois elas são expostas ao navegador.
+
+## Preparar a publicação
+
+No banco vazio da branch `production`, execute `schema.sql` e depois `initial-data.sql`. Esse segundo roteiro insere as três faturas demonstrativas da versão anterior, sem apagar dados. Deve ser executado uma única vez em banco vazio; não reutilize em um banco já populado.
+
+O seed de 180 faturas continua exclusivo do desenvolvimento. Os usuários demonstrativos usam `placeholder` em `password_hash`; não são credenciais válidas de autenticação.
+
+No serviço `gefina` do Render, configure `DATABASE_URL` com a conexão da branch `production`, mantendo os parâmetros SSL. O comando `npm start` usa as variáveis fornecidas pela hospedagem e não lê `.env`.
+
+A aplicação requer essa variável para iniciar. Configure e confira o banco antes de integrar o PR que ativa a conexão, pois um push na `main` dispara a publicação automática.
+
+## Endpoints para conferir
+
+- `/api/health`: responde 200 com `status: ok` e o nome do banco quando uma consulta funciona; responde 503 se o banco estiver indisponível.
+- `/api/invoices`: retorna a lista ordenada por emissão decrescente e ID decrescente em caso de empate.
+- `/api/invoices/1`: consulta parametrizada por ID.
+- `/api/invoices/999999`: responde 404 para um ID sem registro.
+- `/api/invoices/abc`: responde 400 para identificador inválido.
+
+As datas continuam no formato `YYYY-MM-DD`, sem horário, para manter o contrato da interface. Falhas inesperadas nas consultas recebem uma resposta JSON genérica, sem detalhes de conexão.
