@@ -38,4 +38,4 @@ O arquivo `.node-version` fixa Node 24.20.0, que permite executar os arquivos Ty
 
 ## Banco de dados
 
-Veja [a preparação dos ambientes e os roteiros SQL](docs/database-setup.md). A API ainda utiliza a lista em memória; a integração com o banco é a próxima etapa.
+Veja [a preparação dos ambientes e os roteiros SQL](docs/database-setup.md). A API consulta PostgreSQL usando `DATABASE_URL`. Configure essa variável antes de iniciar ou publicar a aplicação.
