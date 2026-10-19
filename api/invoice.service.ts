@@ -1,6 +1,6 @@
 import pool from './database.ts';
 
-type InvoiceStatus = 'pending' | 'paid';
+export type InvoiceStatus = 'pending' | 'paid';
 type InvoiceSituation = 'paid' | 'pending' | 'overdue';
 
 interface Customer {
@@ -9,7 +9,7 @@ interface Customer {
   email: string;
 }
 
-interface Invoice {
+export interface Invoice {
   id: number;
   amount: number;
   status: InvoiceStatus;
@@ -68,7 +68,7 @@ const baseQuery = `
 
 export async function findAllInvoices(): Promise<Invoice[]> {
   const result = await pool.query<InvoiceRow>(
-    `${baseQuery} ORDER BY invoices.issue_date DESC, invoices.id DESC;`,
+    `${baseQuery} ORDER BY invoices.created_at DESC, invoices.id DESC;`,
   );
   return result.rows.map(toInvoice);
 }
@@ -82,4 +82,20 @@ export async function findInvoiceById(
   );
   const row = result.rows[0];
   return row === undefined ? undefined : toInvoice(row);
+}
+
+export async function findRecentInvoices(): Promise<Invoice[]> {
+  const result = await pool.query<InvoiceRow>(
+    `${baseQuery} ORDER BY invoices.created_at DESC, invoices.id DESC LIMIT 5;`,
+  );
+  return result.rows.map(toInvoice);
+}
+
+export async function findOverdueInvoices(): Promise<Invoice[]> {
+  const result = await pool.query<InvoiceRow>(
+    `${baseQuery}
+      WHERE invoices.status = 'pending' AND invoices.due_date < CURRENT_DATE
+      ORDER BY invoices.due_date ASC, invoices.id ASC LIMIT 5;`,
+  );
+  return result.rows.map(toInvoice);
 }

@@ -22,11 +22,9 @@ router.get('/:id', async (request, response) => {
     id < 1 ||
     id > 2147483647
   ) {
-    response
-      .status(400)
-      .json({
-        error: { message: 'Identificador de fatura inválido.' },
-      });
+    response.status(400).json({
+      error: { message: 'Identificador de fatura inválido.' },
+    });
     return;
   }
 

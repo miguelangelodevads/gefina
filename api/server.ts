@@ -1,7 +1,7 @@
 import path from 'node:path';
 import type { ErrorRequestHandler } from 'express';
 import express from 'express';
-
+import dashboard from './dashboard.route.ts';
 import pool from './database.ts';
 import invoices from './invoice.route.ts';
 
@@ -45,6 +45,7 @@ app.get('/api/health', async (_request, response) => {
 });
 
 app.use('/api/invoices', invoices);
+app.use('/api/dashboard', dashboard);
 app.use(express.static(dist));
 
 app.use((_request, response) => {
