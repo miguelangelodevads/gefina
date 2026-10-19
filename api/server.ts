@@ -5,6 +5,21 @@ import express from 'express';
 import pool from './database.ts';
 import invoices from './invoice.route.ts';
 
+function logError(context: string, error: unknown) {
+  if (error instanceof Error) {
+    console.error(context, {
+      name: error.name,
+      message: error.message.replace(
+        /postgres(?:ql)?:\/\/[^\s]+/g,
+        '[conexão omitida]',
+      ),
+      code: 'code' in error ? error.code : undefined,
+    });
+  } else {
+    console.error(context, 'Erro sem detalhes disponíveis.');
+  }
+}
+
 const app = express();
 const dist = path.join(import.meta.dirname, '..', 'web', 'dist');
 
@@ -21,7 +36,8 @@ app.get('/api/health', async (_request, response) => {
     response
       .status(200)
       .json({ status: 'ok', database: result.rows[0].database });
-  } catch {
+  } catch (error) {
+    logError('Falha na verificação do banco.', error);
     response
       .status(503)
       .json({ status: 'error', database: 'unavailable' });
@@ -36,17 +52,15 @@ app.use((_request, response) => {
 });
 
 const handleError: ErrorRequestHandler = (
-  _error,
+  error,
   _request,
   response,
   _next,
 ) => {
-  console.error('Falha ao processar a requisição.');
-  response
-    .status(500)
-    .json({
-      error: { message: 'Não foi possível processar a solicitação.' },
-    });
+  logError('Falha ao processar a requisição.', error);
+  response.status(500).json({
+    error: { message: 'Não foi possível processar a solicitação.' },
+  });
 };
 app.use(handleError);
 
