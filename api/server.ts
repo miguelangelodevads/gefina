@@ -48,6 +48,15 @@ app.use('/api/invoices', invoices);
 app.use('/api/dashboard', dashboard);
 app.use(express.static(dist));
 
+// Entrega a aplicação para que o roteador do navegador abra a tela solicitada.
+app.use((request, response, next) => {
+  if (request.path.startsWith('/api') || request.method !== 'GET') {
+    next();
+    return;
+  }
+  response.sendFile(path.join(dist, 'index.html'));
+});
+
 app.use((_request, response) => {
   response.status(404).json({ message: 'Recurso não encontrado.' });
 });
