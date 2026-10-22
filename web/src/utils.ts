@@ -29,3 +29,14 @@ const dateFormatter = new Intl.DateTimeFormat('pt-BR', {
 export function formatDate(isoDate: string): string {
   return dateFormatter.format(new Date(`${isoDate}T00:00:00`));
 }
+
+export function situationClass(situation: InvoiceSituation): string {
+  switch (situation) {
+    case 'paid':
+      return 'situation-paid';
+    case 'pending':
+      return 'situation-pending';
+    case 'overdue':
+      return 'situation-overdue';
+  }
+}
