@@ -1,4 +1,5 @@
 import path from 'node:path';
+import { existsSync } from 'node:fs';
 import type { ErrorRequestHandler } from 'express';
 import express from 'express';
 import dashboard from './dashboard.route.ts';
@@ -21,6 +22,7 @@ function logError(context: string, error: unknown) {
 }
 
 const app = express();
+app.use(express.json());
 const dist = path.join(import.meta.dirname, '..', 'web', 'dist');
 
 app.use((request, _response, next) => {
@@ -50,7 +52,11 @@ app.use(express.static(dist));
 
 // Entrega a aplicação para que o roteador do navegador abra a tela solicitada.
 app.use((request, response, next) => {
-  if (request.path.startsWith('/api') || request.method !== 'GET') {
+  if (
+    request.path.startsWith('/api') ||
+    request.method !== 'GET' ||
+    !existsSync(path.join(dist, 'index.html'))
+  ) {
     next();
     return;
   }
