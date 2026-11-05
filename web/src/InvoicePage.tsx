@@ -1,16 +1,19 @@
-import { useState, useEffect, useRef } from 'react';
-
-import type { Invoice, InvoiceInput } from './invoiceType.ts';
-import InvoiceTable from './InvoiceTable.tsx';
+import { useEffect, useRef, useState } from 'react';
+import type { CustomerOption } from './customerType.ts';
 import InvoiceForm from './InvoiceForm.tsx';
+import InvoiceTable from './InvoiceTable.tsx';
 
 import {
-  getAllInvoices,
   createInvoice,
-  updateInvoice,
   deleteInvoice,
+  getAllInvoices,
+  updateInvoice,
 } from './invoiceApi.ts';
-import type { CustomerOption } from './customerType.ts';
+import type {
+  Invoice,
+  InvoiceFieldErrors,
+  InvoiceInput,
+} from './invoiceType.ts';
 
 export default function InvoicePage() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -18,6 +21,9 @@ export default function InvoicePage() {
     CustomerOption[]
   >([]);
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<InvoiceFieldErrors>(
+    {},
+  );
   const [busy, setBusy] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -29,6 +35,7 @@ export default function InvoicePage() {
 
   function openModal(invoice: Invoice | null) {
     setTarget(invoice);
+    setFieldErrors({});
     setConfirmDelete(false);
     setFormError(null);
     setDialogContent(true);
@@ -87,12 +94,16 @@ export default function InvoicePage() {
   async function submit(datas: InvoiceInput) {
     setBusy(true);
     setFormError(null);
+    setFieldErrors({});
 
     try {
-      if (!target) {
-        await createInvoice(datas);
-      } else {
-        await updateInvoice(target.id, datas);
+      const failure = !target
+        ? await createInvoice(datas)
+        : await updateInvoice(target.id, datas);
+      if (failure) {
+        setFieldErrors(failure.fields);
+        setFormError(failure.message);
+        return;
       }
 
       closeModal();
@@ -105,9 +116,9 @@ export default function InvoicePage() {
       }
     } catch (error) {
       if (error instanceof Error) setFormError(error.message);
+    } finally {
+      setBusy(false);
     }
-
-    setBusy(false);
   }
 
   async function confirm() {
@@ -145,6 +156,7 @@ export default function InvoicePage() {
       <header className="page-header">
         <h1>Faturas</h1>
         <button
+          type="button"
           className="button-primary"
           onClick={() => openModal(null)}
         >
@@ -164,6 +176,7 @@ export default function InvoicePage() {
         onClose={() => {
           setDialogContent(false);
           setConfirmDelete(false);
+          setFieldErrors({});
         }}
       >
         {dialogContent && (
@@ -171,6 +184,7 @@ export default function InvoicePage() {
             invoice={target}
             customers={customersOptions}
             error={formError}
+            fieldErrors={fieldErrors}
             confirmDelete={confirmDelete}
             setConfirmDelete={setConfirmDelete}
             confirm={confirm}

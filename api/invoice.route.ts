@@ -1,5 +1,5 @@
 import { Router } from 'express';
-
+import { invoiceSchema, toFieldErrors } from './invoice.schema.ts';
 import {
   findAllInvoices,
   findInvoiceById,
@@ -43,7 +43,19 @@ router.get('/:id', async (request, response) => {
 });
 
 router.post('/', async (request, response) => {
-  const invoice = await insertInvoice(request.body);
+  const result = invoiceSchema.safeParse(request.body);
+  if (!result.success) {
+    response.status(400).json({
+      error: {
+        status: 400,
+        message: 'Dados inválidos.',
+        fields: toFieldErrors(result.error),
+      },
+    });
+    return;
+  }
+
+  const invoice = await insertInvoice(result.data);
   response.status(201).json(invoice);
 });
 
@@ -63,7 +75,19 @@ router.put('/:id', async (request, response) => {
     return;
   }
 
-  const invoice = await modifyInvoice(id, request.body);
+  const result = invoiceSchema.safeParse(request.body);
+  if (!result.success) {
+    response.status(400).json({
+      error: {
+        status: 400,
+        message: 'Dados inválidos.',
+        fields: toFieldErrors(result.error),
+      },
+    });
+    return;
+  }
+
+  const invoice = await modifyInvoice(id, result.data);
   if (!invoice) {
     response
       .status(404)

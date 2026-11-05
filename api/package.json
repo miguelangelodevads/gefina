@@ -3,7 +3,8 @@
   "scripts": {
     "start": "node ./server.ts",
     "dev": "node --watch --env-file=.env ./server.ts",
-    "check": "tsc --noEmit"
+    "check": "tsc --noEmit",
+    "test": "node --test ./invoice.validation.test.ts"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
@@ -13,6 +14,7 @@
   },
   "dependencies": {
     "express": "^5.2.1",
-    "pg": "^8.23.1"
+    "pg": "^8.23.1",
+    "zod": "^4.6.7"
   }
 }

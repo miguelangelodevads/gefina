@@ -1,4 +1,8 @@
-import type { Invoice, InvoiceInput } from './invoiceType.ts';
+import type {
+  ApiFailure,
+  Invoice,
+  InvoiceInput,
+} from './invoiceType.ts';
 
 const header = { 'content-type': 'application/json' };
 
@@ -20,12 +24,20 @@ export async function getInvoiceById(id: number): Promise<Invoice> {
 
 export async function createInvoice(
   datas: InvoiceInput,
-): Promise<void> {
+): Promise<ApiFailure | undefined> {
   const response = await fetch('/api/invoices', {
     method: 'POST',
     headers: header,
     body: JSON.stringify(datas),
   });
+
+  if (response.status === 400) {
+    const body = await response.json();
+    return {
+      message: body.error.message,
+      fields: body.error.fields ?? {},
+    };
+  }
 
   if (!response.ok) throw new Error('Falha ao criar fatura.');
 }
@@ -33,12 +45,20 @@ export async function createInvoice(
 export async function updateInvoice(
   id: number,
   datas: InvoiceInput,
-): Promise<void> {
+): Promise<ApiFailure | undefined> {
   const response = await fetch(`/api/invoices/${id}`, {
     method: 'PUT',
     headers: header,
     body: JSON.stringify(datas),
   });
+
+  if (response.status === 400) {
+    const body = await response.json();
+    return {
+      message: body.error.message,
+      fields: body.error.fields ?? {},
+    };
+  }
 
   if (!response.ok) throw new Error('Falha ao editar fatura.');
 }
