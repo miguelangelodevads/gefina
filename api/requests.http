@@ -47,3 +47,27 @@ Content-Type: application/json
 
 ### Deletar fatura
 DELETE {{host}}/api/invoices/181
+
+### Validação: rejeitar criação com campos inválidos (HTTP 400, sem gravar)
+POST {{host}}/api/invoices
+Content-Type: application/json
+
+{
+  "customerId": 0,
+  "amount": 0,
+  "status": "overdue",
+  "issueDate": "2026-11-05",
+  "dueDate": "2026-11-01"
+}
+
+### Validação: rejeitar edição com vencimento anterior à emissão (HTTP 400)
+PUT {{host}}/api/invoices/1
+Content-Type: application/json
+
+{
+  "customerId": 1,
+  "amount": 125000,
+  "status": "pending",
+  "issueDate": "2026-11-05",
+  "dueDate": "2026-11-01"
+}

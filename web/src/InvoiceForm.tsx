@@ -1,20 +1,21 @@
 import {
-  useState,
-  type SubmitEvent,
   type SetStateAction,
+  type SubmitEvent,
+  useState,
 } from 'react';
-
+import type { CustomerOption } from './customerType.ts';
 import type {
   Invoice,
+  InvoiceFieldErrors,
   InvoiceInput,
   InvoiceStatus,
 } from './invoiceType.ts';
-import type { CustomerOption } from './customerType.ts';
 
 interface InvoiceFormProps {
   invoice: Invoice | null;
   customers: CustomerOption[];
   error: string | null;
+  fieldErrors: InvoiceFieldErrors;
   confirmDelete: boolean;
   setConfirmDelete: React.Dispatch<SetStateAction<boolean>>;
   confirm: () => void;
@@ -62,6 +63,12 @@ export default function InvoiceForm(props: InvoiceFormProps) {
         <label htmlFor="customer">Cliente</label>
         <select
           id="customer"
+          aria-invalid={Boolean(props.fieldErrors.customerId)}
+          aria-describedby={
+            props.fieldErrors.customerId
+              ? 'customer-error'
+              : undefined
+          }
           disabled={props.busy}
           value={customerId}
           onChange={(event) => setCustomerId(event.target.value)}
@@ -76,11 +83,20 @@ export default function InvoiceForm(props: InvoiceFormProps) {
             );
           })}
         </select>
+        {props.fieldErrors.customerId && (
+          <p id="customer-error" className="form-error">
+            {props.fieldErrors.customerId}
+          </p>
+        )}
       </div>
       <div className="field">
         <label htmlFor="amount">Valor</label>
         <input
           id="amount"
+          aria-invalid={Boolean(props.fieldErrors.amount)}
+          aria-describedby={
+            props.fieldErrors.amount ? 'amount-error' : undefined
+          }
           type="number"
           step="0.01"
           min="0.01"
@@ -89,12 +105,21 @@ export default function InvoiceForm(props: InvoiceFormProps) {
           onChange={(event) => setAmount(event.target.value)}
           required
         />
+        {props.fieldErrors.amount && (
+          <p id="amount-error" className="form-error">
+            {props.fieldErrors.amount}
+          </p>
+        )}
       </div>
       <div className="horizontal-fields">
         <div className="field">
           <label htmlFor="status">Situação</label>
           <select
             id="status"
+            aria-invalid={Boolean(props.fieldErrors.status)}
+            aria-describedby={
+              props.fieldErrors.status ? 'status-error' : undefined
+            }
             disabled={props.busy}
             value={status}
             onChange={(event) =>
@@ -104,22 +129,42 @@ export default function InvoiceForm(props: InvoiceFormProps) {
             <option value="pending">Pendente</option>
             <option value="paid">Paga</option>
           </select>
+          {props.fieldErrors.status && (
+            <p id="status-error" className="form-error">
+              {props.fieldErrors.status}
+            </p>
+          )}
         </div>
         <div className="field">
           <label htmlFor="issueDate">Emissão</label>
           <input
             id="issueDate"
+            aria-invalid={Boolean(props.fieldErrors.issueDate)}
+            aria-describedby={
+              props.fieldErrors.issueDate
+                ? 'issueDate-error'
+                : undefined
+            }
             type="date"
             disabled={props.busy}
             value={issueDate}
             onChange={(event) => setIssueDate(event.target.value)}
             required
           />
+          {props.fieldErrors.issueDate && (
+            <p id="issueDate-error" className="form-error">
+              {props.fieldErrors.issueDate}
+            </p>
+          )}
         </div>
         <div className="field">
           <label htmlFor="dueDate">Vencimento</label>
           <input
             id="dueDate"
+            aria-invalid={Boolean(props.fieldErrors.dueDate)}
+            aria-describedby={
+              props.fieldErrors.dueDate ? 'dueDate-error' : undefined
+            }
             type="date"
             min={issueDate}
             disabled={props.busy}
@@ -127,6 +172,11 @@ export default function InvoiceForm(props: InvoiceFormProps) {
             onChange={(event) => setDueDate(event.target.value)}
             required
           />
+          {props.fieldErrors.dueDate && (
+            <p id="dueDate-error" className="form-error">
+              {props.fieldErrors.dueDate}
+            </p>
+          )}
         </div>
       </div>
 
