@@ -4,13 +4,18 @@
     "start": "node ./server.ts",
     "dev": "node --watch --env-file=.env ./server.ts",
     "check": "tsc --noEmit",
-    "test": "node --test ./invoice.validation.test.ts"
+    "test": "vitest run && npm run test:validation",
+    "test:watch": "vitest",
+    "test:validation": "node --test ./invoice.validation.test.ts"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/node": "^26.6.3",
     "@types/pg": "^8.23.1",
-    "typescript": "^7.0.2"
+    "@types/supertest": "^7.2.1",
+    "supertest": "^7.3.2",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.12"
   },
   "dependencies": {
     "express": "^5.2.1",

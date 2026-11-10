@@ -8,7 +8,8 @@
     "fix": "biome check --write ./",
     "fix:unsafe": "biome check --write --unsafe ./",
     "build": "npm ci --prefix api --include=dev && npm ci --prefix web --include=dev && npm run build --prefix web",
-    "start": "npm start --prefix api"
+    "start": "npm start --prefix api",
+    "test:api": "npm test --prefix ./api"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.15"

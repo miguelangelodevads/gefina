@@ -1,0 +1,18 @@
+services:
+  database-test:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: gefina
+      POSTGRES_PASSWORD: gefina_test
+      POSTGRES_DB: gefina_test
+    ports:
+      - "127.0.0.1:55432:5432"
+    tmpfs:
+      - /var/lib/postgresql/data
+    volumes:
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/001-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gefina -d gefina_test"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
