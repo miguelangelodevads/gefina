@@ -46,3 +46,7 @@ Consulte [a aula de testes automatizados](docs/aula-testes-api.md) para preparar
 um PostgreSQL temporário local e executar `npm run test:api` com Vitest e Supertest.
 Os testes não usam o Neon de desenvolvimento ou produção. A validação sem banco
 pode ser executada com `npm run test:validation --prefix api`.
+
+## Aula: introdução ao Prisma
+
+Veja [a aula de Prisma](docs/aula-prisma.md). A integração está em preparação na branch `refactor/database-access`; os serviços SQL continuam ativos.
