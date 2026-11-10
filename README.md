@@ -39,3 +39,10 @@ O arquivo `.node-version` fixa Node 24.20.0, que permite executar os arquivos Ty
 ## Banco de dados
 
 Veja [a preparação dos ambientes e os roteiros SQL](docs/database-setup.md). A API consulta PostgreSQL usando `DATABASE_URL`. Configure essa variável antes de iniciar ou publicar a aplicação.
+
+## Testes da API
+
+Consulte [a aula de testes automatizados](docs/aula-testes-api.md) para preparar
+um PostgreSQL temporário local e executar `npm run test:api` com Vitest e Supertest.
+Os testes não usam o Neon de desenvolvimento ou produção. A validação sem banco
+pode ser executada com `npm run test:validation --prefix api`.
