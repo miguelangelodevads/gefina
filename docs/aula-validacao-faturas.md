@@ -33,7 +33,7 @@ O tipo `InvoiceInput` da API agora é inferido do esquema com `z.infer`.
 
 ## Como praticar
 
-Na pasta do projeto, execute `npm test --prefix api`. Os testes usam banco
+Na pasta do projeto, execute `npm run test:validation --prefix api`. Os testes usam banco
 simulado: não acessam o Neon nem alteram faturas reais.
 
 Para observar as respostas HTTP, inicie sua API com o ambiente de desenvolvimento
