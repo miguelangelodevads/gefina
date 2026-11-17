@@ -50,3 +50,11 @@ pode ser executada com `npm run test:validation --prefix api`.
 ## Aula: introdução ao Prisma
 
 Veja [a aula de Prisma](docs/aula-prisma.md). A integração está em preparação na branch `refactor/database-access`; os serviços SQL continuam ativos.
+
+## Aulas atualizadas em 17/11/2026
+
+Comece pelo [roteiro das aulas](docs/roteiro-aulas.md). Ele distingue as etapas
+concluídas na referência do professor das etapas ainda preparatórias neste projeto.
+A [aula de Prisma](docs/aula-prisma.md) agora explica serviços, migrações e seed;
+a [aula de testes da interface](docs/aula-testes-interface.md) acompanha a nova
+branch de trabalho do professor. A atualização é documental e não altera produção.
