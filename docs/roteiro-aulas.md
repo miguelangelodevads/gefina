@@ -15,10 +15,11 @@ O PR #36 concluiu a integração do Prisma. A próxima aula já começou na bran
 | Modelo Prisma e migração inicial | Concluída | Preparados na branch de estudo |
 | Serviços de faturas, clientes e painel com Prisma | Concluída | Explicados; serviços locais ainda usam SQL |
 | Seed e script de migração de produção | Concluída | Explicados; não executados no Neon |
-| Testes de componentes React | Em branch de trabalho | Aula prática nova, instalação manual descrita |
+| Testes de componentes React | Em branch de trabalho | Arquivos, configuração e dependências incorporados |
 
-Esta atualização modifica os documentos de aula. Não publica a branch de estudo
-e não muda o banco ou o serviço Render.
+A etapa de testes de interface está incorporada à branch de estudo, além dos
+documentos. A conversão dos serviços para Prisma ainda está pendente nesta branch.
+Não houve alteração no banco ou no serviço Render.
 
 ## Ordem para aprender com calma
 

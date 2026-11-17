@@ -1,8 +1,9 @@
 # Aula: testando o formulário de faturas
 
 Referência conferida em **17/11/2026**: branch `test/graphic-interface` do professor,
-commit `4b5cb59`. Essa etapa ainda não está na main dele. No seu projeto, esta aula
-é um exercício manual: os arquivos e dependências abaixo ainda não estão instalados.
+commit `4b5cb59`. Essa etapa ainda não está na main dele. No seu projeto, os arquivos, dependências e scripts desta etapa já estão
+instalados na branch `refactor/database-access`. As etapas 2 a 4 explicam como
+recriar a configuração; para executar os arquivos existentes, vá à etapa 6.
 
 ## 1. Qual problema queremos resolver?
 
@@ -186,8 +187,7 @@ npm run check --prefix web
 npm run build --prefix web
 ```
 
-Com apenas esse arquivo, a expectativa é ver dois testes aprovados. Esta é a
-expectativa do exercício, não um resultado executado nesta atualização documental.
+Com apenas esse arquivo, a expectativa é ver dois testes aprovados.
 Para executar automaticamente ao salvar:
 
 ```sh
@@ -219,3 +219,9 @@ para satisfazer o teste sem antes conferir a regra desejada.
 
 Ao terminar, explique a diferença entre testar o formulário, testar uma rota HTTP
 e testar o fluxo completo em um navegador real.
+
+## Verificação desta integração
+
+Os dois testes originais do professor foram incorporados e executados com sucesso.
+A verificação TypeScript e o build Vite também passaram. Você pode executar
+`npm run test:web` na raiz ou `npm test --prefix web`.
