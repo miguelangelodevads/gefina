@@ -1,9 +1,11 @@
 # Aula: testando o formulário de faturas
 
-Referência conferida em **17/11/2026**: branch `test/graphic-interface` do professor,
-commit `4b5cb59`. Essa etapa ainda não está na main dele. No seu projeto, os arquivos, dependências e scripts desta etapa já estão
+Referência atualizada em **18/11/2026**: main do professor em `4a4bf70`,
+com a etapa de testes mesclada pelo PR #39. O arquivo agora tem sete testes. No seu projeto, os arquivos, dependências e scripts desta etapa já estão
 instalados na branch `refactor/database-access`. As etapas 2 a 4 explicam como
-recriar a configuração; para executar os arquivos existentes, vá à etapa 6.
+recriar a configuração; para executar os arquivos existentes, vá à etapa 6. Os passos iniciais
+explicam os dois testes introdutórios; não substitua o arquivo completo de sete
+testes por esse exemplo reduzido.
 
 ## 1. Qual problema queremos resolver?
 
@@ -187,7 +189,8 @@ npm run check --prefix web
 npm run build --prefix web
 ```
 
-Com apenas esse arquivo, a expectativa é ver dois testes aprovados.
+O exemplo reduzido acima contém dois testes. O arquivo atual do projeto contém
+sete: execute-o sem substituir seu conteúdo para acompanhar a etapa mais recente.
 Para executar automaticamente ao salvar:
 
 ```sh
@@ -206,11 +209,11 @@ Troque 1250.37 por 49.90 e escreva primeiro quanto espera em amount: 4990.
 Execute o teste com esse novo valor. Depois faça uma expectativa errada de propósito,
 como 499, execute e compare o valor esperado com o recebido. Corrija em seguida.
 
-Para avançar, crie um teste que recebe busy=true e verifica que o botão Salvar
-fica desabilitado. Você pode usar a propriedade disabled do elemento:
+O arquivo atual já inclui um teste de busy=true. Nesse estado, o nome do botão
+muda para Salvando...; confira também a propriedade disabled:
 
 ```ts
-const button = screen.getByRole('button', { name: 'Salvar' });
+const button = screen.getByRole('button', { name: 'Salvando...' });
 expect((button as HTMLButtonElement).disabled).toBe(true);
 ```
 
@@ -222,6 +225,27 @@ e testar o fluxo completo em um navegador real.
 
 ## Verificação desta integração
 
-Os dois testes originais do professor foram incorporados e executados com sucesso.
+Os sete testes atuais do professor foram incorporados.
 A verificação TypeScript e o build Vite também passaram. Você pode executar
 `npm run test:web` na raiz ou `npm test --prefix web`.
+
+## Continuação da aula: os sete comportamentos
+
+| Teste | O que garante |
+| --- | --- |
+| Campos com rótulos | O usuário encontra Cliente, Valor, Situação e datas |
+| Envio convertido | O callback recebe cliente numérico e valor em centavos |
+| Obrigatório vazio | O navegador impede um envio incompleto |
+| Processamento | Salvando... e Cancelar ficam desabilitados com busy=true |
+| Mensagem de falha | O erro recebido aparece no formulário |
+| Fatura recebida | Editar carrega os campos e mostra Excluir |
+| Cancelamento | Chama onCancel uma vez e não chama onSubmit |
+
+Leia primeiro o nome do teste. Antes de olhar a expectativa, diga qual resultado
+espera. Depois encontre render, a interação e expect. O teste de edição usa
+125037 centavos na entrada e verifica 1250.37 no campo: é o caminho inverso
+do teste de criação.
+
+Pratique acrescentando um teste para uma mensagem de validação específica em
+fieldErrors.amount. Passe uma mensagem fictícia e confira se aparece junto ao
+campo Valor. Não é necessário conectar ao banco para esse exercício.

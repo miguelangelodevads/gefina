@@ -51,7 +51,7 @@ pode ser executada com `npm run test:validation --prefix api`.
 
 Veja [a aula de Prisma](docs/aula-prisma.md). A integração está em preparação na branch `refactor/database-access`; os serviços SQL continuam ativos.
 
-## Aulas atualizadas em 17/11/2026
+## Aulas atualizadas em 18/11/2026
 
 Comece pelo [roteiro das aulas](docs/roteiro-aulas.md). Ele distingue as etapas
 concluídas na referência do professor das etapas ainda preparatórias neste projeto.
@@ -60,3 +60,7 @@ a [aula de testes da interface](docs/aula-testes-interface.md) acompanha a nova
 branch de trabalho do professor. Os arquivos e a configuração dos testes de interface
 já estão incorporados à branch de estudo; execute `npm run test:web` na raiz.
 A conversão dos serviços para Prisma segue pendente. Produção não foi alterada.
+
+A suíte de interface agora acompanha os sete casos da main de referência.
+Veja também [a aula inicial de Tailwind](docs/aula-tailwind.md), cuja configuração
+está preparada na branch de estudo.
