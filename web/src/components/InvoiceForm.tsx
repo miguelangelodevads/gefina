@@ -1,15 +1,15 @@
 import {
   type SetStateAction,
   type SubmitEvent,
-  useState,
+  useState
 } from 'react';
-import type { CustomerOption } from './customerType.ts';
+import type { CustomerOption } from '../types/customerType.ts';
 import type {
   Invoice,
   InvoiceFieldErrors,
   InvoiceInput,
-  InvoiceStatus,
-} from './invoiceType.ts';
+  InvoiceStatus
+} from '../types/invoiceType.ts';
 
 interface InvoiceFormProps {
   invoice: Invoice | null;
@@ -27,19 +27,19 @@ interface InvoiceFormProps {
 
 export default function InvoiceForm(props: InvoiceFormProps) {
   const [customerId, setCustomerId] = useState(
-    !props.invoice ? '' : props.invoice.customer.id,
+    !props.invoice ? '' : String(props.invoice.customer.id)
   );
   const [amount, setAmount] = useState(
-    !props.invoice ? '' : (props.invoice.amount / 100).toFixed(2),
+    !props.invoice ? '' : (props.invoice.amount / 100).toFixed(2)
   );
   const [status, setStatus] = useState<InvoiceStatus>(
-    !props.invoice ? 'pending' : props.invoice.status,
+    !props.invoice ? 'pending' : props.invoice.status
   );
   const [issueDate, setIssueDate] = useState(
-    !props.invoice ? '' : props.invoice.issueDate,
+    !props.invoice ? '' : props.invoice.issueDate
   );
   const [dueDate, setDueDate] = useState(
-    !props.invoice ? '' : props.invoice.dueDate,
+    !props.invoice ? '' : props.invoice.dueDate
   );
 
   const handleSubmit = (event: SubmitEvent) => {
@@ -51,25 +51,38 @@ export default function InvoiceForm(props: InvoiceFormProps) {
       amount: Math.round(Number(amount) * 100),
       status,
       issueDate,
-      dueDate,
+      dueDate
     });
   };
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <h2>{!props.invoice ? 'Criar fatura' : 'Editar fatura'}</h2>
+  const field = 'flex flex-col gap-1';
+  const label = 'text-sm text-text-muted';
+  const input =
+    'px-3 py-2 border border-border rounded-control bg-surface-raised scheme-dark focus-visible:outline-2 focus-visible:outline-primary';
+  const button =
+    'flex-1 px-4 py-2 rounded-control cursor-pointer disabled:cursor-default disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-primary';
+  const error = 'text-sm text-overdue';
 
-      <div className="field">
-        <label htmlFor="customer">Cliente</label>
+  return (
+    <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+      <h2 className="text-xl font-semibold">
+        {!props.invoice ? 'Criar fatura' : 'Editar fatura'}
+      </h2>
+
+      <div className={field}>
+        <label className={label} htmlFor="customer">
+          Cliente
+        </label>
         <select
+          className={`${input} appearance-none`}
           id="customer"
+          disabled={props.busy}
           aria-invalid={Boolean(props.fieldErrors.customerId)}
           aria-describedby={
             props.fieldErrors.customerId
-              ? 'customer-error'
+              ? 'customerId-error'
               : undefined
           }
-          disabled={props.busy}
           value={customerId}
           onChange={(event) => setCustomerId(event.target.value)}
           required
@@ -83,44 +96,40 @@ export default function InvoiceForm(props: InvoiceFormProps) {
             );
           })}
         </select>
-        {props.fieldErrors.customerId && (
-          <p id="customer-error" className="form-error">
-            {props.fieldErrors.customerId}
-          </p>
-        )}
       </div>
-      <div className="field">
-        <label htmlFor="amount">Valor</label>
-        <input
-          id="amount"
-          aria-invalid={Boolean(props.fieldErrors.amount)}
-          aria-describedby={
-            props.fieldErrors.amount ? 'amount-error' : undefined
-          }
-          type="number"
-          step="0.01"
-          min="0.01"
-          disabled={props.busy}
-          value={amount}
-          onChange={(event) => setAmount(event.target.value)}
-          required
-        />
-        {props.fieldErrors.amount && (
-          <p id="amount-error" className="form-error">
-            {props.fieldErrors.amount}
-          </p>
-        )}
-      </div>
-      <div className="horizontal-fields">
-        <div className="field">
-          <label htmlFor="status">Situação</label>
+      <div className="flex gap-2">
+        <div className={`${field} flex-1`}>
+          <label className={label} htmlFor="amount">
+            Valor
+          </label>
+          <input
+            className={input}
+            id="amount"
+            disabled={props.busy}
+            aria-invalid={Boolean(props.fieldErrors.amount)}
+            aria-describedby={
+              props.fieldErrors.amount ? 'amount-error' : undefined
+            }
+            type="number"
+            step="0.01"
+            min="0.01"
+            value={amount}
+            onChange={(event) => setAmount(event.target.value)}
+            required
+          />
+        </div>
+        <div className={field}>
+          <label className={label} htmlFor="status">
+            Situação
+          </label>
           <select
+            className={`${input} appearance-none`}
             id="status"
+            disabled={props.busy}
             aria-invalid={Boolean(props.fieldErrors.status)}
             aria-describedby={
               props.fieldErrors.status ? 'status-error' : undefined
             }
-            disabled={props.busy}
             value={status}
             onChange={(event) =>
               setStatus(event.target.value as InvoiceStatus)
@@ -129,16 +138,17 @@ export default function InvoiceForm(props: InvoiceFormProps) {
             <option value="pending">Pendente</option>
             <option value="paid">Paga</option>
           </select>
-          {props.fieldErrors.status && (
-            <p id="status-error" className="form-error">
-              {props.fieldErrors.status}
-            </p>
-          )}
         </div>
-        <div className="field">
-          <label htmlFor="issueDate">Emissão</label>
+      </div>
+      <div className="flex gap-2">
+        <div className={`${field} flex-1`}>
+          <label className={label} htmlFor="issueDate">
+            Emissão
+          </label>
           <input
+            className={input}
             id="issueDate"
+            disabled={props.busy}
             aria-invalid={Boolean(props.fieldErrors.issueDate)}
             aria-describedby={
               props.fieldErrors.issueDate
@@ -146,48 +156,36 @@ export default function InvoiceForm(props: InvoiceFormProps) {
                 : undefined
             }
             type="date"
-            disabled={props.busy}
             value={issueDate}
             onChange={(event) => setIssueDate(event.target.value)}
             required
           />
-          {props.fieldErrors.issueDate && (
-            <p id="issueDate-error" className="form-error">
-              {props.fieldErrors.issueDate}
-            </p>
-          )}
         </div>
-        <div className="field">
-          <label htmlFor="dueDate">Vencimento</label>
+        <div className={`${field} flex-1`}>
+          <label className={label} htmlFor="dueDate">
+            Vencimento
+          </label>
           <input
+            className={input}
             id="dueDate"
+            disabled={props.busy}
             aria-invalid={Boolean(props.fieldErrors.dueDate)}
             aria-describedby={
               props.fieldErrors.dueDate ? 'dueDate-error' : undefined
             }
             type="date"
             min={issueDate}
-            disabled={props.busy}
             value={dueDate}
             onChange={(event) => setDueDate(event.target.value)}
             required
           />
-          {props.fieldErrors.dueDate && (
-            <p id="dueDate-error" className="form-error">
-              {props.fieldErrors.dueDate}
-            </p>
-          )}
         </div>
       </div>
 
-      {!props.error ? null : (
-        <p className="form-error">{props.error}</p>
-      )}
-
-      <div className="form-actions">
+      <div className="flex gap-2 mt-6">
         {!props.invoice ? null : (
           <button
-            className="button-danger"
+            className={`${button} bg-surface-raised text-overdue border border-overdue`}
             type="button"
             onClick={props.onDelete}
             disabled={props.busy}
@@ -198,7 +196,7 @@ export default function InvoiceForm(props: InvoiceFormProps) {
           </button>
         )}
         <button
-          className="button-secondary"
+          className={`${button} bg-surface-raised border border-border`}
           type="button"
           onClick={props.onCancel}
           disabled={props.busy}
@@ -206,7 +204,7 @@ export default function InvoiceForm(props: InvoiceFormProps) {
           Cancelar
         </button>
         <button
-          className="button-primary"
+          className={`${button} border border-transparent bg-primary`}
           type="submit"
           disabled={props.busy}
         >
@@ -217,13 +215,12 @@ export default function InvoiceForm(props: InvoiceFormProps) {
       </div>
 
       {props.confirmDelete && (
-        <div className="confirm-form">
-          <p>
-            A exclusão é definitiva e não pode ser desfeita. Deseja
-            prosseguir?
+        <div className="flex gap-2 items-center">
+          <p className="text-pending">
+            A exclusão é irreversível. Deseja prosseguir?
           </p>
           <button
-            className="button-secondary"
+            className={`${button} bg-surface-raised border border-border`}
             type="button"
             onClick={() => props.setConfirmDelete(false)}
             disabled={props.busy}
@@ -231,7 +228,7 @@ export default function InvoiceForm(props: InvoiceFormProps) {
             Não
           </button>
           <button
-            className="button-danger"
+            className={`${button} bg-surface-raised text-overdue border border-overdue`}
             type="button"
             onClick={props.confirm}
             disabled={props.busy}
@@ -240,6 +237,33 @@ export default function InvoiceForm(props: InvoiceFormProps) {
           </button>
         </div>
       )}
+
+      {props.fieldErrors.customerId && (
+        <p id="customerId-error" className={error}>
+          {props.fieldErrors.customerId}
+        </p>
+      )}
+      {props.fieldErrors.amount && (
+        <p id="amount-error" className={error}>
+          {props.fieldErrors.amount}
+        </p>
+      )}
+      {props.fieldErrors.status && (
+        <p id="status-error" className={error}>
+          {props.fieldErrors.status}
+        </p>
+      )}
+      {props.fieldErrors.issueDate && (
+        <p id="issueDate-error" className={error}>
+          {props.fieldErrors.issueDate}
+        </p>
+      )}
+      {props.fieldErrors.dueDate && (
+        <p id="dueDate-error" className={error}>
+          {props.fieldErrors.dueDate}
+        </p>
+      )}
+      {props.error && <p className={error}>{props.error}</p>}
     </form>
   );
 }

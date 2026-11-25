@@ -1,6 +1,6 @@
 # Aula: testando o formulário de faturas
 
-Referência atualizada em **18/11/2026**: main do professor em `4a4bf70`,
+Referência atualizada em **24/11/2026**: main do professor em `b6746b8`,
 com a etapa de testes mesclada pelo PR #39. O arquivo agora tem sete testes. No seu projeto, os arquivos, dependências e scripts desta etapa já estão
 instalados na branch `refactor/database-access`. As etapas 2 a 4 explicam como
 recriar a configuração; para executar os arquivos existentes, vá à etapa 6. Os passos iniciais
@@ -96,14 +96,14 @@ comportamentos de uma janela modal real.
 
 ## 4. Escreva os dois primeiros testes
 
-Crie web/src/InvoiceForm.test.tsx com o conteúdo abaixo. O sufixo .test.tsx
+Crie web/src/tests/InvoiceForm.test.tsx com o conteúdo abaixo. O sufixo .test.tsx
 permite identificar um teste que também contém JSX.
 
 ```tsx
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import InvoiceForm from './InvoiceForm.tsx';
+import InvoiceForm from '../components/InvoiceForm.tsx';
 
 function renderForm(onSubmit = vi.fn()) {
   render(

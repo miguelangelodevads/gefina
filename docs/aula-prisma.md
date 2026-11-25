@@ -2,16 +2,11 @@
 
 ## Onde a turma chegou
 
-Comparação atualizada em **17/11/2026**. O professor concluiu a conversão
-para Prisma na main `f9ead51`, por meio do PR #36. Faturas, clientes e painel
-já utilizam o cliente Prisma. Também foram adicionados seed e migrate:deploy.
-A informação da aula anterior sobre seis funções vazias descrevia a etapa de
-10/11; essas funções já foram implementadas na referência atual.
-
-No seu projeto, a branch `refactor/database-access` ainda é preparatória:
-tem o modelo e o cliente, mas conserva os serviços SQL funcionais. Esta atualização
-é do material de estudo; não converte os serviços nem altera Neon ou Render.
-Consulte [o roteiro atualizado](roteiro-aulas.md) e a continuação abaixo.
+Comparação atualizada em **24/11/2026**: referência main `b6746b8`.
+A conversão dos serviços para Prisma está incorporada ao seu projeto, assim como
+Tailwind e a organização em diretórios. As validações e a suíte local foram mantidas.
+O banco existente não recebeu migrações nem carga demonstrativa nesta atualização.
+Veja [a arquitetura atual](aula-arquitetura.md) para localizar os arquivos.
 
 ## 1. Entenda a mudança
 
@@ -24,8 +19,8 @@ Não é necessário criar outro projeto no Neon para estudar esse conceito.
 
 1. `api/prisma/schema.prisma`: declara User, Session, Customer e Invoice.
 2. `api/prisma/migrations/20261110134318_init/migration.sql`: SQL gerado para criar as tabelas.
-3. `api/prisma.ts`: cria o cliente que poderá executar consultas.
-4. `api/invoice.service.ts`: serviço atual, ainda em SQL, para comparar os dois estilos.
+3. `api/src/prisma.ts`: cria o cliente que poderá executar consultas.
+4. `api/src/services/invoice.service.ts`: serviço atual, usando Prisma para consultar e gravar faturas.
 
 `@map("customer_id")` liga o nome customerId do código à coluna customer_id.
 `@@map("invoices")` liga o modelo Invoice à tabela invoices.
@@ -79,11 +74,10 @@ docker compose -p gefina-aula-tests -f api/compose.test.yaml down
 
 ## Exercício para a próxima etapa
 
-Em uma branch de exercício, converta primeiro findAllInvoices. Depois implemente
-busca por ID, recentes, atrasadas, inserção, alteração e remoção. Rode os testes
-após cada função. Será necessário adaptar os testes que simulam pool.query,
-encerrar o cliente Prisma nos testes e preservar os erros de registro inexistente
-ou cliente inválido. Só publique quando todas as rotas continuarem funcionando.
+Leia findAllInvoices e compare com um SELECT equivalente. Depois leia a busca
+por ID, inserção, alteração e remoção. Os testes já foram adaptados: a validação
+usa uma URL sem banco, enquanto a integração usa PostgreSQL local descartável.
+Ao terminar, explique por que o cliente Prisma é desconectado ao finalizar a suíte.
 
 ## 7. Continuação: serviços completos na referência atual
 
@@ -143,7 +137,8 @@ de acesso não deve mudar o significado de atraso.
 
 Na referência atual, postinstall executa prisma generate; migrate:deploy executa
 prisma migrate deploy; seed executa node --env-file=.env ./prisma/seed.ts.
-Esses scripts novos ainda não foram incorporados ao package.json da sua branch.
+Esses scripts já estão incorporados ao package.json da API. O seed deste projeto
+possui uma proteção adicional: só aceita endereço local e banco terminado em _test.
 
 O seed do professor executa **TRUNCATE users, sessions, customers, invoices
 RESTART IDENTITY** dentro de uma transação, antes de inserir dados fictícios.

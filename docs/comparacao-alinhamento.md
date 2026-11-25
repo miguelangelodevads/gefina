@@ -1,55 +1,35 @@
-# Comparação do alinhamento
+# Comparação do alinhamento em 24/11/2026
 
-Referências conferidas em 18/11/2026: main do professor 4a4bf70 e
-refactor/stylization em adb7ba6.
-Comparação com a branch local refactor/database-access.
+Referência: main do professor b6746b8. As principais etapas foram incorporadas:
 
-## Testes da interface: diferenças corrigidas
+- Serviços de faturas, clientes e painel usando Prisma.
+- Scripts postinstall, seed e migrate:deploy na API.
+- Organização api/src em routes, schemas, services e tests.
+- Organização web/src em components, requests, types e tests.
+- Componentes convertidos para Tailwind e remoção do CSS anterior.
+- Sete testes do formulário e ajustes dos imports nos diretórios novos.
+- Caminho web/dist corrigido na aplicação Express dentro de api/src.
 
-- web/src/InvoiceForm.test.tsx: atualizado com os sete testes atuais.
-- web/src/test.setup.ts: adicionado, com limpeza e simulação de dialog.
-- web/vite.config.ts: ambiente jsdom e arquivo de preparação configurados.
-- web/package.json e package-lock.json: Vitest 5.1.0, jsdom 31.0.1,
-  Testing Library React 16.3.3 e user-event 14.6.10 instalados.
-- Scripts test e test:watch em web; atalho test:web na raiz.
+## Diferenças intencionais
 
-Verificação executada em 18/11: os sete testes passaram, assim como TypeScript
-e build Vite com Tailwind.
-Os testes e a configuração Vite foram copiados da referência, sem substituir
-os componentes de produção do projeto.
+- Validação de edição e identificadores, acessibilidade e erros de campo preservados.
+- Erros Prisma de cliente inválido e registro ausente viram 400/404.
+- Vencimento é comparado por dia UTC: fatura que vence hoje continua pendente.
+- Ordenações incluem ID para desempate estável.
+- Health check usa Prisma e mantém a resposta status/database já utilizada.
+- Tratamento e omissão de credenciais nos logs seguem centralizados em app.ts.
+- Os testes só aceitam PostgreSQL local com nome terminado em _test.
+- pg é mantido para preparar/limpar os dados dos testes; os serviços usam Prisma.
+- Seed só pode executar em base local terminada em _test. Não foi executado no Neon.
+- Migrações de produção não fazem parte do build automático: o banco existente
+  precisa de comparação e linha de base antes de adotar a migração inicial.
 
-## Prisma: diferenças ainda pendentes
+Não há escrita ou abertura de PR no repositório do professor. A referência é
+apenas lida; o código é atualizado exclusivamente no seu repositório.
 
-O professor já converteu invoice.service.ts, customer.service.ts e
-dashboard.service.ts para o cliente Prisma. Aqui os serviços continuam usando pg.
-O modelo, a migração inicial e prisma.ts estão presentes como preparação.
-Ainda faltam o seed Prisma, os scripts postinstall/seed/migrate:deploy e a
-adaptação dos testes e tratamento dos erros do banco à conversão dos serviços.
-A migração inicial precisa de análise de compatibilidade/linha de base antes
-que se planeje sua adoção sobre o Neon existente.
+Ajustes de responsividade preservam a navegação e a leitura em janelas estreitas;
+cartões se reorganizam e as tabelas podem rolar sem ampliar toda a página.
 
-O seed da referência usa TRUNCATE com RESTART IDENTITY. Ele não foi executado.
-A configuração de testes local com banco descartável, as validações de POST/PUT,
-o health check e as melhorias de acessibilidade foram preservados.
-
-## Diferenças que não são conteúdo faltante
-
-Há diferenças de formatação e melhorias locais em InvoiceForm, InvoicePage e
-invoiceApi. Elas incluem rótulos de erros associados aos campos, estado ocupado
-e tratamento das falhas na edição e na atualização da lista. Não foram removidas
-para tornar os arquivos textualmente iguais.
-
-Os arquivos estão na branch refactor/database-access e no PR #35, em rascunho.
-A main e a versão publicada não receberam esta preparação. Neon e Render não
-foram modificados nesta integração de testes.
-
-## Estilização: preparação incorporada em 18/11
-
-Tailwind CSS e o plugin Vite 4.3.5 foram instalados. A configuração Vite e o tema
-vieram da nova branch de referência. Mantivemos o CSS anterior abaixo do tema
-para os componentes que ainda utilizam classes antigas. O professor removeu
-esse CSS em sua branch inicial; a conversão dos componentes ainda não aparece
-no commit de referência. A aula explica essa diferença e como prosseguir.
-
-A integração Prisma descrita acima continua pendente. Esta atualização não deve
-ser interpretada como igualdade completa de código entre os repositórios.
+Validação: 38 testes aprovados, verificações TypeScript e instalação limpa com
+build completo aprovadas. Painel, lista e abertura/cancelamento do formulário
+conferidos no navegador contra PostgreSQL local com dados demonstrativos.

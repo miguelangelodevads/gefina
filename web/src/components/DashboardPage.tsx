@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 
-import type { Dashboard } from './dashboardType.ts';
+import type { Dashboard } from '../types/dashboardType.ts';
+import { formatCurrency } from '../utils.ts';
 import InvoiceSummaryTable from './InvoiceSummaryTable.tsx';
 import SummaryCard from './SummaryCard.tsx';
-
-import { formatCurrency } from './utils.ts';
 
 export default function DashboardPage() {
   const [dashboard, setDashboard] = useState<null | Dashboard>(null);
@@ -36,15 +35,17 @@ export default function DashboardPage() {
     getDashboard();
   }, []);
 
-  if (loading) return <p>Carregando painel inicial...</p>;
+  if (loading)
+    return <p className="text-sm text-text-muted">Carregando...</p>;
 
-  if (error !== null || dashboard === null) return <p>{error}</p>;
+  if (error !== null || dashboard === null)
+    return <p className="text-overdue">{error}</p>;
 
   return (
-    <div>
-      <h1>Painel Inicial</h1>
+    <>
+      <h1 className="text-xl font-semibold mb-7">Painel Inicial</h1>
 
-      <div className="summary-cards">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <SummaryCard
           label="Total recebido: "
           value={formatCurrency(dashboard.totals.paid)}
@@ -63,7 +64,7 @@ export default function DashboardPage() {
         />
       </div>
 
-      <div className="summary-tables">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-8">
         <InvoiceSummaryTable
           title="Faturas Recentes"
           dateLabel="Emissão"
@@ -77,6 +78,10 @@ export default function DashboardPage() {
           date={(invoice) => invoice.dueDate}
         />
       </div>
-    </div>
+
+      <small className="block mt-6 text-center text-text-muted">
+        &copy; 2026. Gefina - Gestão financeira simples e eficiente.
+      </small>
+    </>
   );
 }

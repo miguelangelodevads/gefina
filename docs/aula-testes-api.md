@@ -1,14 +1,15 @@
 # Aula: testes automatizados das rotas da API
 
-Alinhamento de 10 de novembro de 2026. Referência da aula: `3c136ea`.
+Atualização de 24 de novembro de 2026. A API agora está em api/src e os serviços
+usam Prisma. A separação app/server e o banco local descartável foram preservados.
 
 ## O que o professor acrescentou
 
-- `api/app.ts`: monta o Express, os middlewares e as rotas, e exporta a aplicação.
-- `api/server.ts`: importa a aplicação e abre a porta do servidor.
+- `api/src/app.ts`: monta o Express, os middlewares e as rotas, e exporta a aplicação.
+- `api/src/server.ts`: importa a aplicação e abre a porta do servidor.
 - Vitest: executa os testes e informa quais passaram ou falharam.
 - Supertest: envia requisições HTTP para o Express durante os testes.
-- `api/invoice.test.ts`: verifica listagem, criação, edição, exclusão e erros.
+- `api/src/tests/invoice.test.ts`: verifica listagem, criação, edição, exclusão e erros.
 - Na raiz, `npm run test:api` executa os testes da API.
 
 Separar os arquivos permite importar a aplicação nos testes sem iniciar o servidor
@@ -31,7 +32,7 @@ do PostgreSQL 17. O banco de testes usa apenas `127.0.0.1:55432`, se chama
 `gefina_test` e recebe as tabelas de `api/database/schema.sql` automaticamente.
 Os dados ficam em memória e são descartados ao remover o contêiner.
 
-`api/test.setup.ts` usa essa conexão local por padrão. Se precisar ajustar a porta,
+`api/src/test.setup.ts` usa essa conexão local por padrão. Se precisar ajustar a porta,
 crie um arquivo local `api/.env.test` com `TEST_DATABASE_URL`. O endereço deve ser
 local e o nome do banco deve terminar em `_test`. O executor não carrega seu
 `.env` de desenvolvimento nem reutiliza a variável `DATABASE_URL` da produção.
@@ -71,9 +72,10 @@ formulário. As verificações conferem o código HTTP e os dados retornados.
 Cada teste começa com uma base conhecida. Assim, o resultado não depende de ter
 clicado antes no formulário ou de outra pessoa ter criado uma fatura.
 
-Os nove testes de integração exercitam o Express e um PostgreSQL real, temporário.
-Os dezessete testes de validação anteriores continuam separados e usam consultas
-simuladas. O comando principal executa os dois grupos: 26 testes ao todo.
+Os quatorze testes de integração exercitam o Express e um PostgreSQL real, temporário.
+Os dezessete testes de validação anteriores continuam separados e não consultam um banco disponível. O comando principal executa os dois grupos:
+31 testes ao todo. As novas verificações incluem clientes, painel, vencimento hoje,
+cliente inexistente e faturas ausentes na edição e exclusão.
 
 Para rodar apenas a validação, sem Docker:
 
@@ -89,7 +91,7 @@ npm run test:watch --prefix api
 
 ## Exercício para aprender sozinho
 
-Abra `api/invoice.test.ts`, encontre o teste que recusa valor zero e observe a
+Abra `api/src/tests/invoice.test.ts`, encontre o teste que recusa valor zero e observe a
 resposta HTTP 400 e `error.fields.amount`. Depois escreva um teste parecido para
 um valor negativo. Execute novamente e leia o resultado.
 

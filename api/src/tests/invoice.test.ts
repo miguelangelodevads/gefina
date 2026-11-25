@@ -5,16 +5,15 @@ import {
   beforeEach,
   describe,
   expect,
-  it,
+  it
 } from 'vitest';
-
-import app from './app.ts';
-
-import pool from './database.ts';
+import app from '../app.ts';
+import pool from '../database.ts';
+import prisma from '../prisma.ts';
 
 const customer = {
   id: 0,
-  email: 'teste@gefina.com.br',
+  email: 'teste@gefina.com.br'
 };
 
 const invoice = { id: 0 };
@@ -29,7 +28,7 @@ async function clear(): Promise<void> {
                 WHERE email = $1
             );
         `,
-    [customer.email],
+    [customer.email]
   );
 
   await pool.query(
@@ -37,7 +36,7 @@ async function clear(): Promise<void> {
             DELETE FROM customers
             WHERE email = $1;
         `,
-    [customer.email],
+    [customer.email]
   );
 }
 
@@ -48,7 +47,7 @@ async function populate(): Promise<void> {
             VALUES ($2, 'Teste', $1)
             RETURNING id;
         `,
-    [customer.email, user.id],
+    [customer.email, user.id]
   );
 
   customer.id = connectCustomer.rows[0].id;
@@ -59,7 +58,7 @@ async function populate(): Promise<void> {
             VALUES ($1, 125037, 'pending', '2020-01-01', '2020-01-31')
             RETURNING id;
         `,
-    [customer.id],
+    [customer.id]
   );
 
   invoice.id = connectInvoice.rows[0].id;
@@ -73,7 +72,7 @@ describe('rotas de faturas', () => {
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       status: 'ok',
-      database: 'gefina_test',
+      database: 'gefina_test'
     });
   });
 
@@ -81,7 +80,7 @@ describe('rotas de faturas', () => {
     const response = await request.get('/api/invoices/2147483647');
     expect(response.status).toBe(404);
     expect(response.body.error.message).toBe(
-      'Fatura não encontrada.',
+      'Fatura não encontrada.'
     );
   });
 
@@ -93,7 +92,7 @@ describe('rotas de faturas', () => {
         amount: 100,
         status: 'paid',
         issueDate: '2020-02-01',
-        dueDate: '2020-01-31',
+        dueDate: '2020-01-31'
       });
     expect(response.status).toBe(400);
     expect(response.body.error.fields.dueDate).toBeDefined();
@@ -102,13 +101,78 @@ describe('rotas de faturas', () => {
     expect(saved.body.status).toBe('pending');
   });
 
+  it('consulta clientes e totais pelo Prisma', async () => {
+    const customers = await request.get('/api/customers/options');
+    expect(customers.status).toBe(200);
+    expect(
+      customers.body.some(
+        (item: { id: number }) => item.id === customer.id
+      )
+    ).toBe(true);
+    const dashboard = await request.get('/api/dashboard');
+    expect(dashboard.status).toBe(200);
+    expect(dashboard.body.totals.invoiceCount).toBe(1);
+    expect(dashboard.body.totals.customerCount).toBe(1);
+    expect(dashboard.body.totals.pending).toBe(125037);
+  });
+
+  it('mantém pendente a fatura que vence hoje', async () => {
+    const today = new Date().toISOString().slice(0, 10);
+    const response = await request.post('/api/invoices').send({
+      customerId: customer.id,
+      amount: 100,
+      status: 'pending',
+      issueDate: '2020-01-01',
+      dueDate: today
+    });
+    expect(response.status).toBe(201);
+    expect(response.body.situation).toBe('pending');
+    const dashboard = await request.get('/api/dashboard');
+    expect(dashboard.status).toBe(200);
+    expect(
+      dashboard.body.overdueInvoices.some(
+        (item: { id: number }) => item.id === response.body.id
+      )
+    ).toBe(false);
+  });
+
+  it('retorna erro de campo para cliente inexistente', async () => {
+    const response = await request.post('/api/invoices').send({
+      customerId: 2147483647,
+      amount: 100,
+      status: 'pending',
+      issueDate: '2020-01-01',
+      dueDate: '2020-01-31'
+    });
+    expect(response.status).toBe(400);
+    expect(response.body.error.fields.customerId).toBeDefined();
+  });
+
+  it('retorna 404 ao editar fatura inexistente', async () => {
+    const response = await request
+      .put('/api/invoices/2147483647')
+      .send({
+        customerId: customer.id,
+        amount: 100,
+        status: 'pending',
+        issueDate: '2020-01-01',
+        dueDate: '2020-01-31'
+      });
+    expect(response.status).toBe(404);
+  });
+
+  it('retorna 404 ao excluir fatura inexistente', async () => {
+    const response = await request.delete('/api/invoices/2147483647');
+    expect(response.status).toBe(404);
+  });
+
   beforeAll(async () => {
     const result = await pool.query<{ id: number }>(
       `INSERT INTO users (name, email, password_hash)
                  VALUES ('Teste de rotas', $1, 'apenas-teste')
                  ON CONFLICT (email) DO UPDATE SET name = EXCLUDED.name
                  RETURNING id;`,
-      [user.email],
+      [user.email]
     );
     user.id = result.rows[0].id;
   });
@@ -122,6 +186,7 @@ describe('rotas de faturas', () => {
     await clear();
     await pool.query('DELETE FROM users WHERE id = $1;', [user.id]);
     await pool.end();
+    await prisma.$disconnect();
   });
 
   it('devolve a relação de faturas', async () => {
@@ -137,7 +202,7 @@ describe('rotas de faturas', () => {
       amount: 12345,
       status: 'pending',
       issueDate: '2020-01-01',
-      dueDate: '2020-01-31',
+      dueDate: '2020-01-31'
     });
 
     expect(response.status).toBe(201);
@@ -155,7 +220,7 @@ describe('rotas de faturas', () => {
         amount: 125037,
         status: 'paid',
         issueDate: '2020-01-01',
-        dueDate: '2020-01-31',
+        dueDate: '2020-01-31'
       });
 
     expect(response.status).toBe(200);
@@ -165,7 +230,7 @@ describe('rotas de faturas', () => {
 
   it('remove fatura', async () => {
     const removal = await request.delete(
-      `/api/invoices/${invoice.id}`,
+      `/api/invoices/${invoice.id}`
     );
     const search = await request.get(`/api/invoices/${invoice.id}`);
 
@@ -185,7 +250,7 @@ describe('rotas de faturas', () => {
       amount: 0,
       status: 'pending',
       issueDate: '2020-01-01',
-      dueDate: '2020-01-31',
+      dueDate: '2020-01-31'
     });
 
     expect(response.status).toBe(400);

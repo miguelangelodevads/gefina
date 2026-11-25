@@ -7,7 +7,7 @@ if (!process.env.DATABASE_URL) {
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   connectionTimeoutMillis: 5000,
-  query_timeout: 5000,
+  query_timeout: 5000
 });
 
 // Uma conexão ociosa pode cair quando o banco suspende ou reinicia.

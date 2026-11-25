@@ -1,7 +1,7 @@
 # Aula: início da estilização com Tailwind
 
-Atualização de **18/11/2026**. Referência: branch refactor/stylization,
-commit adb7ba6. A main do professor é 4a4bf70; esta etapa ainda está em trabalho.
+Atualização de **24/11/2026**. Referência main `b6746b8`.
+A conversão dos componentes para Tailwind foi concluída e incorporada.
 
 ## 1. Entenda o que mudou
 
@@ -14,12 +14,10 @@ O professor adicionou tailwindcss e @tailwindcss/vite, ambos na versão 4.3.5.
 O plugin tailwindcss() entrou na lista plugins de web/vite.config.ts.
 O CSS passou a importar tailwindcss e declarar um tema com @theme.
 
-Esses arquivos e dependências estão incorporados à sua branch de estudo.
-O seu CSS anterior foi mantido abaixo do tema: os componentes ainda usam as
-classes antigas, que o professor ainda não converteu nessa referência.
-Essa é uma diferença intencional em relação ao CSS enxuto da branch dele.
-A configuração adiciona também o reset de estilos base do Tailwind; confira
-o resultado no navegador ao avançar com a conversão.
+As dependências, o plugin, o tema e os componentes convertidos estão incorporados.
+O CSS antigo foi removido: cada componente usa classes utilitárias, como na
+referência. Veja os arquivos em web/src/components. Validações, callbacks e
+melhorias de acessibilidade do projeto foram preservados.
 
 ## 2. Leia a configuração
 

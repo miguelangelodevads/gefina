@@ -1,12 +1,15 @@
 {
   "type": "module",
   "scripts": {
-    "start": "node ./server.ts",
-    "dev": "node --watch --env-file=.env ./server.ts",
+    "start": "node ./src/server.ts",
+    "dev": "node --watch --env-file=.env ./src/server.ts",
     "check": "tsc --noEmit",
     "test": "vitest run && npm run test:validation",
     "test:watch": "vitest",
-    "test:validation": "node --test ./invoice.validation.test.ts"
+    "test:validation": "node --test ./src/tests/invoice.validation.test.ts",
+    "postinstall": "prisma generate",
+    "seed": "node --env-file=.env ./prisma/seed.ts",
+    "migrate:deploy": "prisma migrate deploy"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",

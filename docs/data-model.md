@@ -2,7 +2,9 @@
 
 # Modelo de dados
 
-Na branch `refactor/database-access`, `api/prisma/schema.prisma` representa o modelo para a adoção do Prisma. A aplicação ainda utiliza os serviços SQL existentes; a migração inicial não foi aplicada ao Neon. Veja `docs/aula-prisma.md`.
+O modelo Prisma está em api/prisma/schema.prisma e os serviços em api/src/services
+já utilizam o cliente Prisma. A migração inicial não foi executada no Neon.
+Veja a aula de Prisma e a aula de arquitetura para os caminhos atuais.
 
 Estrutura das tabelas do Gefina. A fonte das decisões a respeito do produto é a
 especificação; este documento registra como essas decisões se traduzem em tabelas.

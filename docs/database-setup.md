@@ -39,7 +39,7 @@ WHERE status = 'pending' AND due_date < CURRENT_DATE;
 
 ## Conectar a API
 
-A API consulta PostgreSQL por meio de `pg`, instalado no pacote `api/`. As consultas ficam em `api/invoice.service.ts`; as rotas aguardam seus resultados com `async/await`.
+A API consulta PostgreSQL por meio de `pg`, instalado no pacote `api/`. As consultas ficam em `api/src/services/invoice.service.ts`; as rotas aguardam seus resultados com `async/await`.
 
 Para desenvolvimento, copie `api/.env.example` para `api/.env` e preencha `DATABASE_URL` com a conexão da branch `development`. Preserve os parâmetros SSL fornecidos pelo Neon. A variável é carregada pelo comando `npm run dev` executado em `api/`.
 

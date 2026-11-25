@@ -1,19 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
-import type { CustomerOption } from './customerType.ts';
-import InvoiceForm from './InvoiceForm.tsx';
-import InvoiceTable from './InvoiceTable.tsx';
-
 import {
   createInvoice,
   deleteInvoice,
   getAllInvoices,
-  updateInvoice,
-} from './invoiceApi.ts';
+  updateInvoice
+} from '../requests/invoiceApi.ts';
+import type { CustomerOption } from '../types/customerType.ts';
 import type {
   Invoice,
   InvoiceFieldErrors,
-  InvoiceInput,
-} from './invoiceType.ts';
+  InvoiceInput
+} from '../types/invoiceType.ts';
+import InvoiceForm from './InvoiceForm.tsx';
+import InvoiceTable from './InvoiceTable.tsx';
 
 export default function InvoicePage() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -22,7 +21,7 @@ export default function InvoicePage() {
   >([]);
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<InvoiceFieldErrors>(
-    {},
+    {}
   );
   const [busy, setBusy] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
@@ -111,7 +110,7 @@ export default function InvoicePage() {
         await refresh();
       } catch {
         setError(
-          'Operação concluída, mas a lista não atualizou. Recarregue a página.',
+          'Operação concluída, mas a lista não atualizou. Recarregue a página.'
         );
       }
     } catch (error) {
@@ -126,6 +125,7 @@ export default function InvoicePage() {
 
     setBusy(true);
     setFormError(null);
+    setFieldErrors({});
 
     try {
       await deleteInvoice(target.id);
@@ -137,7 +137,7 @@ export default function InvoicePage() {
         await refresh();
       } catch {
         setError(
-          'Operação concluída, mas a lista não atualizou. Recarregue a página.',
+          'Operação concluída, mas a lista não atualizou. Recarregue a página.'
         );
       }
     } catch (error) {
@@ -147,31 +147,32 @@ export default function InvoicePage() {
     setBusy(false);
   }
 
-  if (loading) return <p>Carregando faturas...</p>;
+  if (loading)
+    return <p className="text-sm text-text-muted">Carregando...</p>;
 
-  if (error) return <p>{error}</p>;
+  if (error) return <p className="text-overdue">{error}</p>;
 
   return (
     <>
-      <header className="page-header">
-        <h1>Faturas</h1>
+      <header className="flex justify-between items-center mb-6">
+        <h1 className="text-xl font-semibold">Faturas</h1>
         <button
+          className="bg-primary px-4 py-2 rounded-control cursor-pointer focus-visible:outline-2 focus-visible:outline-primary"
           type="button"
-          className="button-primary"
           onClick={() => openModal(null)}
         >
           Nova fatura
         </button>
       </header>
-      <div className="panel">
+      <div className="overflow-x-auto p-4 bg-surface border border-border rounded-surface">
         <InvoiceTable invoices={invoices} edit={openModal} />
       </div>
       <dialog
-        className="invoice-modal"
         aria-label={target ? 'Editar fatura' : 'Criar fatura'}
         onCancel={(event) => {
           if (busy) event.preventDefault();
         }}
+        className="m-auto max-w-[calc(100vw-2rem)] w-xl p-6 bg-surface backdrop:bg-background-backdrop border border-border rounded-dialog text-text focus-visible:outline-2 focus-visible:outline-primary"
         ref={dialogRef}
         onClose={() => {
           setDialogContent(false);

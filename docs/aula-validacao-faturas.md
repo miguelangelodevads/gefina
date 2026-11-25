@@ -19,13 +19,13 @@ permanece aberta para o aluno corrigir os valores, sem perder o que digitou.
 
 ## Caminho dos dados para estudar
 
-1. `web/src/InvoiceForm.tsx`: transforma reais em centavos e envia os valores.
-2. `web/src/invoiceApi.ts`: faz o POST ou PUT e devolve os erros por campo.
-3. `api/invoice.route.ts`: chama `invoiceSchema.safeParse` antes do serviço.
-4. `api/invoice.schema.ts`: descreve as regras e transforma os erros do Zod.
-5. `api/invoice.service.ts`: grava apenas os valores que passaram na validação.
-6. `web/src/InvoicePage.tsx`: mantém os erros no estado e libera o botão após a resposta.
-7. `web/src/InvoiceForm.tsx`: mostra a mensagem junto ao campo correspondente.
+1. `web/src/components/InvoiceForm.tsx`: transforma reais em centavos e envia os valores.
+2. `web/src/requests/invoiceApi.ts`: faz o POST ou PUT e devolve os erros por campo.
+3. `api/src/routes/invoice.route.ts`: chama `invoiceSchema.safeParse` antes do serviço.
+4. `api/src/schemas/invoice.schema.ts`: descreve as regras e transforma os erros do Zod.
+5. `api/src/services/invoice.service.ts`: grava apenas os valores que passaram na validação.
+6. `web/src/components/InvoicePage.tsx`: mantém os erros no estado e libera o botão após a resposta.
+7. `web/src/components/InvoiceForm.tsx`: mostra a mensagem junto ao campo correspondente.
 
 `safeParse` devolve um resultado com `success`. Se for falso, usamos `error`;
 se for verdadeiro, usamos `data`, em vez de confiar no corpo original recebido.

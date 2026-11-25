@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs';
 
-const envFile = new URL('./.env.test', import.meta.url);
+const envFile = new URL('../.env.test', import.meta.url);
 if (existsSync(envFile)) process.loadEnvFile(envFile);
 
 // Nunca carregar o .env de desenvolvimento ou reutilizar DATABASE_URL de produção.
@@ -14,7 +14,7 @@ if (
   !target.pathname.endsWith('_test')
 ) {
   throw new Error(
-    'Use TEST_DATABASE_URL de um PostgreSQL local com nome terminado em _test.',
+    'Use TEST_DATABASE_URL de um PostgreSQL local com nome terminado em _test.'
   );
 }
 process.env.DATABASE_URL = connection;
