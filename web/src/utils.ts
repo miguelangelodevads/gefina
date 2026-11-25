@@ -1,6 +1,6 @@
-import type { InvoiceSituation } from './invoiceType.ts';
+import type { InvoiceSituation } from './types/invoiceType.ts';
 
-export function situationLabel(situation: InvoiceSituation): string {
+export function situationLabel(situation: InvoiceSituation) {
   switch (situation) {
     case 'paid':
       return 'Paga';
@@ -11,32 +11,32 @@ export function situationLabel(situation: InvoiceSituation): string {
   }
 }
 
-const currencyFormatter = new Intl.NumberFormat('pt-BR', {
-  style: 'currency',
-  currency: 'BRL',
-});
-
-export function formatCurrency(cents: number): string {
-  return currencyFormatter.format(cents / 100);
-}
-
-const dateFormatter = new Intl.DateTimeFormat('pt-BR', {
-  day: '2-digit',
-  month: '2-digit',
-  year: 'numeric',
-});
-
-export function formatDate(isoDate: string): string {
-  return dateFormatter.format(new Date(`${isoDate}T00:00:00`));
-}
-
-export function situationClass(situation: InvoiceSituation): string {
+export function situationClass(situation: InvoiceSituation) {
   switch (situation) {
     case 'paid':
-      return 'situation-paid';
+      return 'text-paid';
     case 'pending':
-      return 'situation-pending';
+      return 'text-pending';
     case 'overdue':
-      return 'situation-overdue';
+      return 'text-overdue';
   }
+}
+
+export function formatCurrency(cents: number): string {
+  const formatter = new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  });
+
+  return formatter.format(cents / 100);
+}
+
+export function formatDate(isoDate: string): string {
+  const formatter = new Intl.DateTimeFormat('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  });
+
+  return formatter.format(new Date(`${isoDate}T00:00:00`));
 }
