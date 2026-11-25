@@ -83,15 +83,13 @@ const handleError: ErrorRequestHandler = (
 ) => {
   if (error && typeof error === 'object' && 'code' in error) {
     if (error.code === 'P2003') {
-      response
-        .status(400)
-        .json({
-          error: {
-            status: 400,
-            message: 'Cliente inválido.',
-            fields: { customerId: 'Selecione um cliente existente.' }
-          }
-        });
+      response.status(400).json({
+        error: {
+          status: 400,
+          message: 'Cliente inválido.',
+          fields: { customerId: 'Selecione um cliente existente.' }
+        }
+      });
       return;
     }
     if (error.code === 'P2025') {
